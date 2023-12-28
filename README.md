@@ -5,7 +5,7 @@ Golang version manager. Shell script to manage multiple active golang versions.
 ## fish shell
 Install using Fisher(or other plugin manager):
 ```
-fisher install tenfyzhong/fish-gg
+fisher install tenfyzhong/gg
 ```
 
 # Introductions

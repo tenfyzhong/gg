@@ -58,14 +58,10 @@ function __gg-ls-remote -d 'list remote version'
 
     if set -q _flag_force; or test ! -f "$cachefile"; or test (math (date +%s)-(date +%s -r "$cachefile")) -gt 86400
         curl -sL go.dev/dl | sed -n -E 's/.*toggle(Visible)?" id="(go.*)">/\2/p' | sort -V | uniq > "$cachefile"
-    end
-
-    if test ! -f "$cachefile"
-        return 1
+        echo "gotip" >> "$cachefile"
     end
 
     set -l ds (cat "$cachefile")
-    set -a ds "gotip"
     __gg_helper_print $ds
 end
 
@@ -90,10 +86,12 @@ function __gg-install -d 'install a specified version'
 
         go install golang.org/dl/go$v@latest
         if test $status -ne 0
+            echo "go install golang.org/dl/go$v@latest failed" >&2
             continue
         end
         go$v download
         if test $status -ne 0
+            echo "go$v download failed" >&2
             continue
         end
     end
@@ -107,8 +105,14 @@ function __gg-remove -d 'remove specified version'
         return 0
     end
 
+    if test -z "$argv"
+        _gg-remove_help
+        return 1
+    end
+
+    set -l rootdir (__gg_rootdir)
     for v in $argv
-        rm -rf "(__gg_rootdir)/go$v"
+        rm -rf "$rootdir/go$v"
         rm -rf "$GOPATH/bin/go$v"
     end
 end
@@ -121,9 +125,18 @@ function __gg-use -d 'print the specified version environment'
         return 0
     end
 
-    if test -z $argv
+    if test -z "$argv"
         _gg-use_help
         return 1
+    end
+
+    set -l v $argv[1]
+
+    set -l rootdir (__gg_rootdir)
+    if test ! -d $rootdir/go$v
+        echo "# The version $v is not exist, please run the command below to install it first" >&2
+        echo "gg install $v" >&2
+        return 2
     end
 
     set s ''
@@ -136,13 +149,13 @@ function __gg-use -d 'print the specified version environment'
     end
 
     set -l source_cmd 'gg'
-    if test -n $s
-        set source_cmd (printf 'gg use --%s %s' $s $argv[1])
+    if test -n "$s"
+        set source_cmd (printf 'gg use --%s %s' $s $v)
     else
-        set source_cmd (printf 'gg use %s' $argv[1])
+        set source_cmd (printf 'gg use %s' $v)
     end
 
-    if test -z $s
+    if test -z "$s"
         set s $SHELL
     end
 
@@ -153,7 +166,7 @@ function __gg-use -d 'print the specified version environment'
         printf '# for example:\n'
         printf '# > %s | source\n' $source_cmd
         printf '\n'
-        printf 'set -gx GOROOT (go%s env GOROOT)\n' $argv[1]
+        printf 'set -gx GOROOT (go%s env GOROOT)\n' $v
         printf 'fish_add_path $GOROOT/bin\n'
     else
         # export GOROOT=$(go1.14.12 env GOROOT)
@@ -165,7 +178,7 @@ function __gg-use -d 'print the specified version environment'
         printf '# if you use direnv to manage environment, you can redirect the output to .envrc in the current directory\n'
         printf '# > %s >> .envrc; direnv allow\n' $source_cmd
         printf '\n'
-        printf 'export GOROOT=$(go%s env GOROOT)\n' $argv[1]
+        printf 'export GOROOT=$(go%s env GOROOT)\n' $v
         printf 'export PATH=$GOROOT/bin:$PATH\n'
     end
 end
@@ -173,7 +186,7 @@ end
 function __gg_helper_print
     for d in $argv
         set -l v (string sub -s 3 $d)
-        if test -z $v
+        if test -z "$v"
             continue
         end
         echo $v

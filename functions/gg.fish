@@ -78,9 +78,10 @@ function __gg-install -d 'install a specified version'
         return 1
     end
 
+    set -l rootdir (__gg_rootdir)
     for v in $argv
         echo "installing go$v ..."
-        if test -d "(__gg_rootdir)/go$v"
+        if test -d "$rootdir/go$v"
             continue
         end
 

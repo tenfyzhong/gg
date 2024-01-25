@@ -40,11 +40,9 @@ function mock_curl -d 'mock curl'
 end
 
 function demock_curl
-    argparse 'f/func=' -- $argv
-    functions -e $_flag_func
+    functions -e curl
     set -e curl_status
     set -e curl_stdout
-    set -e curl_stderr
 end
 
 function mock_go -d 'mock go'

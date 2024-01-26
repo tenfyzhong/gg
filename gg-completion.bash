@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 _gg_complete_submodule() {
     if [[ $# -ne 1 ]]; then

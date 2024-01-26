@@ -1,0 +1,351 @@
+#!/usr/bin/env bash
+
+function _gg_ls {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                _gg_ls_help
+                exit 0
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                _gg_ls_help
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    rootdir=$(_gg_rootdir)
+    if [ ! -d "$rootdir" ]; then
+        exit
+    fi
+
+    ds=$(ls "$rootdir" | sort -V)
+    _gg_helper_print $ds
+}
+
+function _gg_ls_remote {
+    force=0
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                _gg_ls_remote_help
+                exit 0
+                ;;
+            -f|--force)
+                force=1
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                _gg_ls_remote
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    rootdir=$(_gg_rootdir)
+    cachefile="$rootdir/.remote-cache"
+    if [ ! -d "$rootdir" ]; then
+        mkdir -p "$rootdir"
+    fi
+
+    if [ "$force" = 1 ] || [ ! -f "$cachefile" ] || (( $(date +%s)-$(date +%s -r "$cachefile") > 86400 )) ; then
+        curl -sL go.dev/dl | sed -n -E 's/.*toggle(Visible)?" id="(go.*)">/\2/p' | sort -V | uniq > "$cachefile"
+        echo "gotip" >> "$cachefile"
+    fi
+
+    ds=$(cat "$cachefile")
+    _gg_helper_print $ds
+}
+
+function _gg_install {
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                _gg_install_help
+                exit 0
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                _gg_install_help
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if [[ $# -eq 0 ]]; then
+        _gg_install_help
+        exit 1
+    fi
+
+    root=$(_gg_rootdir)
+    for v in "$@"; do
+        echo "installing go$v ..."
+        if [ -d "$root/go$v" ]; then
+            continue
+        fi
+
+        if ! go install golang.org/dl/go$v@latest; then
+            echo "go install golang.org/dl/go$v@latest failed" >&2
+            continue
+        fi
+        if ! go$v download; then
+            echo "go$v download failed" >&2
+            continue
+        fi
+    done
+}
+
+function _gg_remove {
+    while [[ $# -gt 0 ]]; do
+        case $1 in 
+            -h|--help)
+                _gg_remove_help
+                exit 0
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                _gg_remove_help
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if [[ $# -eq 0 ]]; then
+        _gg_remove_help
+        exit 1
+    fi
+
+    root=$(_gg_rootdir)
+    for v in "$@"; do
+        rm -rf "$root/go$v"
+        rm -rf "$GOPATH/bin/go$v"
+    done
+}
+
+function _gg_use {
+    s=
+    while [[ $# -gt 0 ]]; do
+        case $1 in 
+            -h|--help)
+                _gg_use_help
+                exit 0
+                ;;
+            -b|--bash)
+                s=bash
+                shift
+                ;;
+            -z|--zsh)
+                s=zsh
+                shift
+                ;;
+            -f|--fish)
+                s=fish
+                shift
+                ;;
+            --)
+                shift
+                break
+                ;;
+            -*)
+                _gg_use_help
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+
+    if [[ $# -eq 0 ]]; then
+        _gg_use_help
+        exit 1
+    fi
+
+    v="$1"
+
+    rootdir=$(_gg_rootdir)
+    if [ ! -d "$rootdir/go$v" ]; then
+        echo "# The version $v is not exist, please run the command below to install it first" >&2
+        echo "gg install $v" >&2
+        exit 2
+    fi
+
+    source_cmd="gg use $v"
+    if [ -n "$s" ]; then
+        source_cmd="gg use --$s $v"
+    fi
+
+    if [ -z "$s" ]; then
+        s="$SHELL"
+    fi
+
+    if [[ "$s" == *"fish" ]]; then
+        # set -g GOROOT (go1.14.12 env GOROOT)
+        # fish_add_path $GOROOT/bin
+        echo "# source this code to enable it"
+        echo "# for example:"
+        echo "# > $source_cmd | source" 
+        echo ""
+        echo "set -gx GOROOT (go$v env GOROOT)"
+        echo 'fish_add_path $GOROOT/bin'
+    else
+        # export GOROOT=$(go1.14.12 env GOROOT)
+        # export PATH=${GOROOT}/bin:$PATH
+        echo "# source this code to enable it"
+        echo "# for example:"
+        echo "# > $source_cmd | source"
+        echo ""
+        echo "# if you use direnv to manage environment, you can redirect the output to .envrc in the current directory"
+        echo "# > $source_cmd >> .envrc; direnv allow"
+        echo ""
+        echo "export GOROOT=\$(go$v env GOROOT)"
+        echo 'export PATH=$GOROOT/bin:$PATH'
+    fi
+}
+
+function _gg_helper_print {
+    for d in "$@"
+    do
+        v=${d:2}
+        if [ -z "$v" ]; then
+            continue
+        fi
+        echo "$v"
+    done
+}
+
+function _gg_rootdir {
+    echo -n "$HOME/sdk"
+}
+
+function _gg_help {
+    echo 'gg: golang version manager' 
+    echo 'Usage: gg [options] <subcommand> [options] <args>' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -h/--help         print this help message' 
+    echo '' 
+    echo 'Subcommands:' 
+    echo '  ls           list local version' 
+    echo '  ls-remote    list remote version' 
+    echo '  install      install specified version' 
+    echo '  remove       remove specified version' 
+    echo '  use          print the specified version environment'
+}
+
+function _gg_ls_help {
+    echo 'gg ls: list local version' 
+    echo 'Usage: gg ls [options]' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -h/--help    print this help message'
+}
+
+function _gg_ls_remote_help {
+    echo 'gg ls-remote: list remote version, it will use the cache if the age of it less than 1 day' 
+    echo 'Usage: gg ls-remote [options]' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -f/--force   force to update cache' 
+    echo '  -h/--help    print this help message'
+}
+
+function _gg_install_help {
+    echo 'gg install: install specified version' 
+    echo 'Usage: gg install [options] <version...>' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -h/--help    print this help message'
+}
+
+function _gg_remove_help {
+    echo 'gg remove: remove specified version' 
+    echo 'Usage: gg remove [options] <version...>' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -h/--help    print this help message'
+}
+
+function _gg_use_help {
+    echo 'gg use: print the specified version environment'
+    echo 'If no shell option provide, it will use the $SHELL as default' 
+    echo 'Usage: gg use [options] <version>' 
+    echo '' 
+    echo 'Options:' 
+    echo '  -b/--bash          print the bash environment' 
+    echo '  -z/--zsh           print the zsh environment' 
+    echo '  -f/--fish          print the fish environment' 
+    echo '  -h/--help          print this help message' 
+}
+
+function _gg {
+    if [[ $# -eq 0 ]]; then
+        _gg_help
+        exit 1
+    fi
+    while [[ $# -gt 0 ]]; do
+        case $1 in 
+            ls)
+                shift
+                _gg_ls "$@"
+                break
+                ;;
+            ls-remote)
+                shift
+                _gg_ls_remote "$@"
+                break
+                ;;
+            install)
+                shift
+                _gg_install "$@"
+                break
+                ;;
+            remove)
+                shift
+                _gg_remove "$@"
+                break
+                ;;
+            use)
+                shift
+                _gg_use "$@"
+                break
+                ;;
+            -h|--help)
+                _gg_help
+                break
+                ;;
+            *)
+                _gg_help
+                exit 1
+                ;;
+        esac
+    done
+}
+
+_gg "$@"

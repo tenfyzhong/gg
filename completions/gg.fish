@@ -11,7 +11,7 @@ complete -c gg -f -n '__fish_seen_subcommand_from ls' -s h -l help -d 'print thi
 complete -c gg -f -n '__fish_seen_subcommand_from ls-remote' -s f -l force -d 'force to update cache'
 complete -c gg -f -n '__fish_seen_subcommand_from ls-remote' -s h -l help -d 'print this help message'
 complete -c gg -f -n '__fish_seen_subcommand_from install' -s h -l help -d 'print this help message'
-complete -c gg -f -k -n '__fish_seen_subcommand_from install' -a '(__gg-ls-remote)'
+complete -c gg -f -k -n '__fish_seen_subcommand_from install' -a "(__gg-ls-remote)"
 complete -c gg -f -n '__fish_seen_subcommand_from remove' -s h -l help -d 'print this help message'
 complete -c gg -f -k -n '__fish_seen_subcommand_from remove' -a "(__gg-ls)"
 complete -c gg -f -n '__fish_seen_subcommand_from use' -s b -l bash -d 'print the bash environment'

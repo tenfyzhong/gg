@@ -369,13 +369,13 @@ mock_curl -s 0 --stdout 'cat $dlfile'
 mock_go --status_install 0 --status_download 0
 gg install 1.16 1.18 tip
 
-@test 'complte gg install ' (complete -C 'gg install ' | string collect) = (cat $expect_version_output | string collect)
+@test 'complete gg install ' (complete -C 'gg install ' | string collect) = (cat $expect_version_output | string collect)
 
-@test 'complte bb use ' (complete -C 'gg use ' | string collect) = '1.16
+@test 'complete bb use ' (complete -C 'gg use ' | string collect) = '1.16
 1.18
 tip'
 
-@test 'complte bb remove ' (complete -C 'gg remove ' | string collect) = '1.16
+@test 'complete bb remove ' (complete -C 'gg remove ' | string collect) = '1.16
 1.18
 tip'
 demock_go

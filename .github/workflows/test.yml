@@ -2,9 +2,18 @@ name: CI
 
 on: [push, pull_request]
 
+env:
+  gg_repo: ${{ github.repository }}
+
 jobs:
-  test:
-    name: test
+  test-fish:
+    name: Test fish
     uses: tenfyzhong/workflows/.github/workflows/fishtape.yml@main
     with:
       test-glob: "tests/*.fish"
+
+  test-bash:
+    name: Test bash
+    uses: tenfyzhong/workflows/.github/workflows/bats.yml@bats
+    with:
+      test-glob: "tests/*.bats"

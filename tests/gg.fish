@@ -359,8 +359,8 @@ ls	list local version
 ls-remote	list remote version
 remove	remove specified version
 use	print the specified version environment
--h	print this help message
---help	print this help message'
+-h	show help message
+--help	show help message'
 
 @test 'complete gg l' (complete -C 'gg l' | string collect) = 'ls	list local version
 ls-remote	list remote version'

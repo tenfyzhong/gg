@@ -31,18 +31,26 @@ _gg_complete_submodule() {
 }
 
 _gg_complete() {
-    local opts
+    local cur opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
 
-    case "$COMP_CWORD" in
-        1)
-            opts="ls ls-remote install remove use -h --help"
+    case "$cur" in
+        -*)
+            opts='-h --help'
             ;;
-        2)
-            opts=$(_gg_complete_submodule "${COMP_WORDS[1]}")
+        *)
+            case "$COMP_CWORD" in
+                1)
+                    opts="ls ls-remote install remove use -h --help"
+                    ;;
+                2)
+                    opts=$(_gg_complete_submodule "${COMP_WORDS[1]}")
+                    ;;
+            esac
             ;;
     esac
+
 
     COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
     return 0

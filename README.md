@@ -1,3 +1,16 @@
+# Table of Contents
+- [gg](#gg)
+- [Install](#install)
+  - [fish shell](#fish-shell)
+  - [bash/zsh](#bash/zsh)
+  - [manually](#manually)
+    - [fish shell](#fish-shell)
+    - [bash](#bash)
+    - [zsh](#zsh)
+- [Introductions](#introductions)
+  - [How it works](#how-it-works)
+  - [Usage](#usage)
+
 # gg
 Golang version manager. Shell script to manage multiple active golang versions.
 

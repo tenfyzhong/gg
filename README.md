@@ -8,6 +8,26 @@ Install using Fisher(or other plugin manager):
 fisher install tenfyzhong/gg
 ```
 
+## bash/zsh
+Use `homebrew` to install
+```
+brew tap tenfyzhong/tap
+brew install gg
+```
+
+## manually
+### fish shell
+1. download `functions/gg.fish` to `~/.config/fish/functions`
+2. download `completions` to `~/.config/fish/completions`
+
+### bash
+1. download `gg` to a directory in your `$PATH`, such as `/usr/local/bin`
+2. download `gg-completions.bash` to a directory and source it in your `.bashrc`
+
+### zsh
+1. download `gg` to a directory in your `$PATH`, such as `/usr/local/bin`
+2. download `_gg` to a directory in you `fpath`
+
 # Introductions
 `gg` is a Golang version manager. It can download a special version of golang, and switch to it.
 

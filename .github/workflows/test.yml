@@ -14,6 +14,6 @@ jobs:
 
   test-bash:
     name: Test bash
-    uses: tenfyzhong/workflows/.github/workflows/bats.yml@bats
+    uses: tenfyzhong/workflows/.github/workflows/bats.yml@main
     with:
       test-glob: "tests/*.bats"

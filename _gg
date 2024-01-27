@@ -1,0 +1,90 @@
+#compdef gg
+
+__gg() {
+    typeset -A opt_args
+    local context state line
+
+    local curcontext="$curcontext"
+    local ret=1
+
+    _arguments -C \
+    '-h[show help message]' \
+    '--help[show help message]' \
+    '1: :__gg_complete_subcommands' \
+    '*::arg:->args' && ret=0
+
+    case "$state" in
+        args)
+            case $words[1] in
+                (ls)
+                    _arguments -C \
+                        '-h[show help message]' \
+                        '--help[show help message]' \
+                        && ret=0
+                    ;;
+                (ls-remote)
+                    _arguments -C \
+                        '-f[force to update cache]' \
+                        '--force[force to update cache]' \
+                        '-h[show help message]' \
+                        '--help[show help message]' \
+                        && ret=0
+                    ;;
+                (install)
+                    _arguments -C \
+                        '-h[show help message]' \
+                        '--help[show help message]' \
+                        '1: :__gg_complete_remote_version' \
+                        && ret=0
+                    ;;
+                (remove)
+                    _arguments -C \
+                        '-h[show help message]' \
+                        '--help[show help message]' \
+                        '1: :__gg_complete_local_version' \
+                        && ret=0
+                    ;;
+                (use)
+                    _arguments -C \
+                        '-b[print the bash environment]' \
+                        '--bash[print the bash environment]' \
+                        '-z[print the zsh environment]' \
+                        '--zsh[print the zsh environment]' \
+                        '-f[print the fish environment]' \
+                        '--fish[print the fish environment]' \
+                        '-h[show help message]' \
+                        '--help[show help message]' \
+                        '1: :__gg_complete_local_version' \
+                        && ret=0
+                    ;;
+                *)
+                    (( ret )) && _message 'no more arguments'
+            esac
+            ;;
+    esac
+    return ret
+}
+
+__gg_complete_subcommands() {
+    local -a commands=(
+        'ls:list local version'
+        'ls-remote:list remote version'
+        'install:install specified version'
+        'remove:remove specified version'
+        'use:print the specified version environment'
+    )
+
+    _describe -t commands 'command' commands "$@"
+}
+
+__gg_complete_remote_version() {
+    versions=($(gg ls-remote))
+     _describe -t versions 'versions' versions "$@"
+}
+
+__gg_complete_local_version() {
+    versions=($(gg ls))
+     _describe -t versions 'versions' versions "$@"
+}
+
+__gg "$@"

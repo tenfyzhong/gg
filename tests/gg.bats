@@ -3,9 +3,15 @@
 
 setup_file() {
     if [ -z "$gg_repo" ]; then
-        exit
+        cwd=$(pwd)
+        export gg_repo="$cwd"
     fi
+
     dir=$(realpath "$gg_repo")/tests
+    if [ ! -d "$dir" ]; then
+        exit 1
+    fi
+
     export dlfile=$dir/data/dl.html
     export expect_cache_file=$dir/data/remote-cache
     export expect_version_output=$dir/data/version-output

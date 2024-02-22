@@ -48,8 +48,8 @@ brew install gg
 `gg` wraps [golang.org/dl](https://github.com/golang/dl), make it easy to download and install golang version.
 
 If you install a special version manually, you should install follow this steps:
-1. `go install golang.org/dl/go1.18@latest`
-2. `go1.18 download`
+1. `go install golang.org/dl/go1.18@latest`, install a go to `$GOPATH/bin`
+2. `go1.18 download`, download the archived go to `~/sdk/`
 
 After you install the special version golang, you can use such as: `go1.18 <subcommand>`  
 for example: `go1.18 build` or `go1.18 install`
@@ -57,13 +57,13 @@ for example: `go1.18 build` or `go1.18 install`
 In other ways, you can set the `GOROOT` environment variable to specify the path of golang version.
 For bash shell: 
 ```bash
-export GOROOT=$(go1.18 env GOROOT)
+export GOROOT=$HOME/sdk/go1.18
 export PATH=$GOROOT/bin:$PATH
 ```
 
 For fish shell:
 ```fish
-set -gx GOROOT (go1.18 env GOROOT)
+set -gx GOROOT $HOME/sdk/go1.18
 fish_add_path $GOROOT/bin
 ```
 

@@ -218,7 +218,7 @@ set -l output (gg use -b 1.16 | string collect)
 # if you use direnv to manage environment, you can redirect the output to .envrc in the current directory
 # > gg use --bash 1.16 >> .envrc; direnv allow
 
-export GOROOT=$(go1.16 env GOROOT)
+export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH'
 
 set -l output (gg use -z 1.16 | string collect)
@@ -229,7 +229,7 @@ set -l output (gg use -z 1.16 | string collect)
 # if you use direnv to manage environment, you can redirect the output to .envrc in the current directory
 # > gg use --zsh 1.16 >> .envrc; direnv allow
 
-export GOROOT=$(go1.16 env GOROOT)
+export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH'
 
 set -l output (gg use -f 1.16 | string collect)
@@ -237,7 +237,7 @@ set -l output (gg use -f 1.16 | string collect)
 # for example:
 # > gg use --fish 1.16 | source
 
-set -gx GOROOT (go1.16 env GOROOT)
+set -gx GOROOT $HOME/sdk/go1.16
 fish_add_path $GOROOT/bin'
 
 set -g SHELL bash
@@ -249,7 +249,7 @@ set -l output (gg use 1.16 | string collect)
 # if you use direnv to manage environment, you can redirect the output to .envrc in the current directory
 # > gg use 1.16 >> .envrc; direnv allow
 
-export GOROOT=$(go1.16 env GOROOT)
+export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH'
 
 set -g SHELL zsh
@@ -261,7 +261,7 @@ set -l output (gg use 1.16 | string collect)
 # if you use direnv to manage environment, you can redirect the output to .envrc in the current directory
 # > gg use 1.16 >> .envrc; direnv allow
 
-export GOROOT=$(go1.16 env GOROOT)
+export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH'
 
 set -g SHELL fish
@@ -270,7 +270,7 @@ set -l output (gg use 1.16 | string collect)
 # for example:
 # > gg use 1.16 | source
 
-set -gx GOROOT (go1.16 env GOROOT)
+set -gx GOROOT $HOME/sdk/go1.16
 fish_add_path $GOROOT/bin'
 demock_go 1.16
 deinit

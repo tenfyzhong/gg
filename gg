@@ -206,16 +206,16 @@ function _gg_use {
     fi
 
     if [[ "$s" == *"fish" ]]; then
-        # set -g GOROOT (go1.14.12 env GOROOT)
+        # set -g GOROOT $HOME/sdk/go1.18
         # fish_add_path $GOROOT/bin
         echo "# source this code to enable it"
         echo "# for example:"
         echo "# > $source_cmd | source" 
         echo ""
-        echo "set -gx GOROOT (go$v env GOROOT)"
+        echo "set -gx GOROOT \$HOME/sdk/go$v"
         echo 'fish_add_path $GOROOT/bin'
     else
-        # export GOROOT=$(go1.14.12 env GOROOT)
+        # export GOROOT=$HOME/sdk/go1.18
         # export PATH=${GOROOT}/bin:$PATH
         echo "# source this code to enable it"
         echo "# for example:"
@@ -224,7 +224,7 @@ function _gg_use {
         echo "# if you use direnv to manage environment, you can redirect the output to .envrc in the current directory"
         echo "# > $source_cmd >> .envrc; direnv allow"
         echo ""
-        echo "export GOROOT=\$(go$v env GOROOT)"
+        echo "export GOROOT=\$HOME/sdk/go$v"
         echo 'export PATH=$GOROOT/bin:$PATH'
     fi
 }

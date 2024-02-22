@@ -1,4 +1,4 @@
-.PHONY: all
+.PHONY: all bash fish
 
 cwd=$(shell pwd)
 

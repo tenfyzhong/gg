@@ -161,16 +161,16 @@ function __gg-use -d 'print the specified version environment'
     end
 
     if string match -r -q 'fish$' $s
-        # set -g GOROOT (go1.14.12 env GOROOT)
+        # set -g GOROOT $HOME/sdk/go1.18
         # fish_add_path $GOROOT/bin
         printf '# source this code to enable it\n'
         printf '# for example:\n'
         printf '# > %s | source\n' $source_cmd
         printf '\n'
-        printf 'set -gx GOROOT (go%s env GOROOT)\n' $v
+        printf 'set -gx GOROOT $HOME/sdk/go%s\n' $v
         printf 'fish_add_path $GOROOT/bin\n'
     else
-        # export GOROOT=$(go1.14.12 env GOROOT)
+        # export GOROOT=$HOME/sdk/go1.18
         # export PATH=${GOROOT}/bin:$PATH
         printf '# source this code to enable it\n'
         printf '# for example:\n'
@@ -179,7 +179,7 @@ function __gg-use -d 'print the specified version environment'
         printf '# if you use direnv to manage environment, you can redirect the output to .envrc in the current directory\n'
         printf '# > %s >> .envrc; direnv allow\n' $source_cmd
         printf '\n'
-        printf 'export GOROOT=$(go%s env GOROOT)\n' $v
+        printf 'export GOROOT=$HOME/sdk/go%s\n' $v
         printf 'export PATH=$GOROOT/bin:$PATH\n'
     end
 end

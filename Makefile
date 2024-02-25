@@ -1,4 +1,4 @@
-.PHONY: all bash fish
+.PHONY: all bash fish ggenvbash
 
 cwd=$(shell pwd)
 
@@ -9,3 +9,6 @@ bash:
 
 fish:
 	fish -c 'fishtape tests/*.fish'
+
+ggenvbash:
+	gg_repo=$(cwd) bats tests/ggenv.bats

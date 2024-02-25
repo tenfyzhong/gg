@@ -1,0 +1,21 @@
+#compdef ggenv
+
+__ggenv() {
+    typeset -A opt_args
+    local context state line
+
+    local curcontext="$curcontext"
+    local ret=1
+
+    _arguments -C \
+    '-h[show help message]' \
+    '--help[show help message]' \
+    '1: :__ggenv_complete_subcommands' && ret=0
+}
+
+__ggenv_complete_local_version() {
+    versions=($(gg ls))
+     _describe -t versions 'versions' versions "$@"
+}
+
+__ggenv "$@"

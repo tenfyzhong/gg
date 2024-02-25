@@ -1,15 +1,27 @@
 export gg_repo=$(pwd)
 
-export HOME=$(command mktemp -d)
-mkdir -p $HOME/sdk
-mkdir -p $HOME/sdk/go1.18
+setup() {
+    temp=$(mktemp -d)
+    export HOME="$temp"
+    export sdkpath="$HOME/sdk"
+    echo "HOME:$HOME"
+    echo "sdkpath:$sdkpath"
+    mkdir -p "$sdkpath"
+    mkdir -p "$sdkpath/go1.18"
+    mkdir -p "$HOME/bin"
+    export PATH=$HOME/bin:$gg_repo:$PATH
+    touch $HOME/bin/direnv
+    chmod +x $HOME/bin/direnv
+    export project=$(mktemp -d)
+    cd $project
+}
 
-mkdir -p $HOME/.bin/direnv
-chmod +x $HOME/.bin/direnv
-export PATH=$HOME/.bin:$gg_repo:$PATH
+teardown() {
+    rm -rf "$HOME"
+    unset sdkpath
+    unset HOME
+}
 
-export cwd=$(command mktemp -d)
-cd $cwd
 
 @test 'ggenv -t' {
     expect=$(cat <<'EOF'
@@ -63,5 +75,5 @@ EOF
 @test 'succ' {
     run ggenv 1.18
     [ "$status" -eq 0 ]
-    [ -f "$cwd/.envrc" ]
+    [ -f "$project/.envrc" ]
 }

@@ -10,6 +10,8 @@
 - [Introductions](#introductions)
   - [How it works](#how-it-works)
   - [Usage](#usage)
+    - [gg](#gg)
+    - [ggenv](#ggenv)
 
 # gg
 Golang version manager. Shell script to manage multiple active golang versions.
@@ -78,7 +80,8 @@ gg use -b 1.18 >> .envrc; direnv allow
 
 
 ## Usage
-It has 5 subcommands which help you to download or use a special version of golang:  
+### gg
+Command `gg` has 5 subcommands which help you to download or use a special version of golang:  
 | command        | options    | description               |
 |----------------|------------|---------------------------|
 | `gg ls`        |            | list local version        |
@@ -86,3 +89,6 @@ It has 5 subcommands which help you to download or use a special version of gola
 | `gg install`   | version... | install specified version |
 | `gg remove`    | version... | remove specified version  |
 | `gg use`       | version    | remove specified version  |
+
+### ggenv
+Command `ggenv` combine `gg use` and `direnv allow`, make it use `gg` and `direnv` easily

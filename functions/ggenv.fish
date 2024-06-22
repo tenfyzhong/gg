@@ -22,7 +22,11 @@ function ggenv
         return 3
     end
 
-    gg use -b $v > .envrc && direnv allow
+    if test -f .envrc
+        sed -i '/# -------- gg begin --------/,/# -------- gg end --------/d' .envrc
+    end
+
+    gg use -b $v >> .envrc && direnv allow
 end
 
 function _ggenv_help

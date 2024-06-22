@@ -3,10 +3,10 @@
 
 function _ggenv_help {
     echo 'ggenv: set go version to .envrc and direnv allow'
-    echo 'Usage: ggenv [version]' 
-    echo '' 
-    echo 'Options:' 
-    echo '  -h/--help         print this help message' 
+    echo 'Usage: ggenv [version]'
+    echo ''
+    echo 'Options:'
+    echo '  -h/--help         print this help message'
 }
 
 function _ggenv {
@@ -36,6 +36,10 @@ function _ggenv {
     if [ ! -d $HOME/sdk/go$v ]; then
         echo "ggenv: go version $v not exist, please install it first" >&2
         exit 3
+    fi
+
+    if [ -f .envrc ]; then
+        sed -i '/# ---- gg begin ----/,/# ---- gg end ----/d' .envrc
     fi
 
     gg use -b $v > .envrc && direnv allow

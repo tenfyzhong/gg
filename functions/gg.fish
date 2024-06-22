@@ -1,7 +1,7 @@
 function gg -d 'golang version manager'
     argparse -s 'h/help' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg_help
         return 0
     end
@@ -30,7 +30,7 @@ end
 function __gg-ls -d 'list local version'
     argparse 'h/help' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg-ls_help
         return 0
     end
@@ -45,7 +45,7 @@ end
 function __gg-ls-remote -d 'list remote version'
     argparse 'h/help' 'f/force' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg-ls-remote_help
         return 0
     end
@@ -68,7 +68,7 @@ end
 function __gg-install -d 'install a specified version'
     argparse 'h/help' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg-install_help
         return 0
     end
@@ -101,7 +101,7 @@ end
 function __gg-remove -d 'remove specified version'
     argparse 'h/help' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg-remove_help
         return 0
     end
@@ -121,7 +121,7 @@ end
 function __gg-use -d 'print the specified version environment'
     argparse -X 1 'h/help' 'b/bash' 'z/zsh' 'f/fish' -- $argv 2>/dev/null
 
-    if set -q _flag_help 
+    if set -q _flag_help
         _gg-use_help
         return 0
     end
@@ -163,15 +163,18 @@ function __gg-use -d 'print the specified version environment'
     if string match -r -q 'fish$' $s
         # set -g GOROOT $HOME/sdk/go1.18
         # fish_add_path $GOROOT/bin
+        printf '# -------- gg begin --------\n'
         printf '# source this code to enable it\n'
         printf '# for example:\n'
         printf '# > %s | source\n' $source_cmd
         printf '\n'
         printf 'set -gx GOROOT $HOME/sdk/go%s\n' $v
         printf 'fish_add_path $GOROOT/bin\n'
+        printf '# -------- gg end --------\n'
     else
         # export GOROOT=$HOME/sdk/go1.18
         # export PATH=${GOROOT}/bin:$PATH
+        printf '# -------- gg begin --------\n'
         printf '# source this code to enable it\n'
         printf '# for example:\n'
         printf '# > %s | source\n' $source_cmd
@@ -181,6 +184,7 @@ function __gg-use -d 'print the specified version environment'
         printf '\n'
         printf 'export GOROOT=$HOME/sdk/go%s\n' $v
         printf 'export PATH=$GOROOT/bin:$PATH\n'
+        printf '# -------- gg end --------\n'
     end
 end
 
@@ -214,7 +218,7 @@ function _gg_help
         '  use          print the specified version environment'
 end
 
-function _gg-ls_help 
+function _gg-ls_help
     printf %s\n \
         'gg ls: list local version' \
         'Usage: gg ls [options]' \
@@ -223,7 +227,7 @@ function _gg-ls_help
         '  -h/--help    print this help message'
 end
 
-function _gg-ls-remote_help 
+function _gg-ls-remote_help
     printf %s\n \
         'gg ls-remote: list remote version, it will use the cache if the age of it less than 1 day' \
         'Usage: gg ls-remote [options]' \
@@ -261,6 +265,5 @@ function _gg-use_help
         '  -b/--bash          print the bash environment' \
         '  -z/--zsh           print the zsh environment' \
         '  -f/--fish          print the fish environment' \
-        '  -h/--help          print this help message' 
+        '  -h/--help          print this help message'
 end
-

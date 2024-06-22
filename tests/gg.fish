@@ -64,7 +64,7 @@ function mock_go -d 'mock go'
     end
 
     mkdir -p $sdkpath/go$v
-    
+
 end"
     end
 
@@ -211,7 +211,8 @@ init -t 'use 1.16'
 mock_go --status_install 0 --status_download 0
 gg install 1.16
 set -l output (gg use -b 1.16 | string collect)
-@test 'check use bash 1.16' "$output" = '# source this code to enable it
+@test 'check use bash 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use --bash 1.16 | source
 
@@ -219,10 +220,12 @@ set -l output (gg use -b 1.16 | string collect)
 # > gg use --bash 1.16 >> .envrc; direnv allow
 
 export GOROOT=$HOME/sdk/go1.16
-export PATH=$GOROOT/bin:$PATH'
+export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------'
 
 set -l output (gg use -z 1.16 | string collect)
-@test 'check use zsh 1.16' "$output" = '# source this code to enable it
+@test 'check use zsh 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use --zsh 1.16 | source
 
@@ -230,19 +233,23 @@ set -l output (gg use -z 1.16 | string collect)
 # > gg use --zsh 1.16 >> .envrc; direnv allow
 
 export GOROOT=$HOME/sdk/go1.16
-export PATH=$GOROOT/bin:$PATH'
+export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------'
 
 set -l output (gg use -f 1.16 | string collect)
-@test 'check use fish 1.16' "$output" = '# source this code to enable it
+@test 'check use fish 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use --fish 1.16 | source
 
 set -gx GOROOT $HOME/sdk/go1.16
-fish_add_path $GOROOT/bin'
+fish_add_path $GOROOT/bin
+# -------- gg end --------'
 
 set -g SHELL bash
 set -l output (gg use 1.16 | string collect)
-@test 'check use default bash 1.16' "$output" = '# source this code to enable it
+@test 'check use default bash 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use 1.16 | source
 
@@ -250,11 +257,13 @@ set -l output (gg use 1.16 | string collect)
 # > gg use 1.16 >> .envrc; direnv allow
 
 export GOROOT=$HOME/sdk/go1.16
-export PATH=$GOROOT/bin:$PATH'
+export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------'
 
 set -g SHELL zsh
 set -l output (gg use 1.16 | string collect)
-@test 'check use default zsh 1.16' "$output" = '# source this code to enable it
+@test 'check use default zsh 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use 1.16 | source
 
@@ -262,16 +271,19 @@ set -l output (gg use 1.16 | string collect)
 # > gg use 1.16 >> .envrc; direnv allow
 
 export GOROOT=$HOME/sdk/go1.16
-export PATH=$GOROOT/bin:$PATH'
+export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------'
 
 set -g SHELL fish
 set -l output (gg use 1.16 | string collect)
-@test 'check use default fish 1.16' "$output" = '# source this code to enable it
+@test 'check use default fish 1.16' "$output" = '# -------- gg begin --------
+# source this code to enable it
 # for example:
 # > gg use 1.16 | source
 
 set -gx GOROOT $HOME/sdk/go1.16
-fish_add_path $GOROOT/bin'
+fish_add_path $GOROOT/bin
+# -------- gg end --------'
 demock_go 1.16
 deinit
 

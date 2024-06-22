@@ -1,6 +1,3 @@
-#!/usr/bin/env bats
-
-
 setup_file() {
     if [ -z "$gg_repo" ]; then
         cwd=$(pwd)
@@ -44,7 +41,7 @@ mock_curl() {
     status=
     stdout=
     while [[ $# -gt 0 ]]; do
-        case $1 in 
+        case $1 in
             -s|--status)
                 status=$2
                 shift
@@ -79,7 +76,7 @@ demock_curl() {
 
 mock_go() {
     while [[ $# -gt 0 ]]; do
-        case $1 in 
+        case $1 in
             --status_install)
                 export go_install_status=$2
                 shift
@@ -97,8 +94,8 @@ mock_go() {
     done
 
 cat << 'EOF' > "$HOME"/bin/go
-if [ "$go_install_status" -ne 0 ]; then 
-    exit "$go_install_status" 
+if [ "$go_install_status" -ne 0 ]; then
+    exit "$go_install_status"
 fi
 pkg="$2"
 v=$(echo "$pkg" | sed 's/golang\.org\/dl\/go\(.*\)@latest/\1/')
@@ -110,7 +107,7 @@ if [ "\$go_download_status" -ne 0 ]; then
     exit "\$go_download_status"
 fi
 mkdir -p \$sdkpath/go$v
-echo "downloading $v" 
+echo "downloading $v"
 EOFINLINE
 
 chmod +x "$HOME"/bin/go$v
@@ -262,6 +259,7 @@ demock_go() {
     gg install 1.16
     run gg use -b 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use --bash 1.16 | source
@@ -271,6 +269,7 @@ demock_go() {
 
 export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------
 EOF
 )
     echo "output:$output"
@@ -279,6 +278,7 @@ EOF
 
     run gg use -z 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use --zsh 1.16 | source
@@ -288,6 +288,7 @@ EOF
 
 export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------
 EOF
 )
     echo "output:$output"
@@ -296,12 +297,14 @@ EOF
 
     run gg use -f 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use --fish 1.16 | source
 
 set -gx GOROOT $HOME/sdk/go1.16
 fish_add_path $GOROOT/bin
+# -------- gg end --------
 EOF
 )
     echo "output:$output"
@@ -311,6 +314,7 @@ EOF
     export SHELL=bash
     run gg use 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use 1.16 | source
@@ -320,6 +324,7 @@ EOF
 
 export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------
 EOF
 )
     echo "output:$output"
@@ -329,6 +334,7 @@ EOF
     export SHELL=zsh
     run gg use 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use 1.16 | source
@@ -338,6 +344,7 @@ EOF
 
 export GOROOT=$HOME/sdk/go1.16
 export PATH=$GOROOT/bin:$PATH
+# -------- gg end --------
 EOF
 )
     echo "output:$output"
@@ -347,12 +354,14 @@ EOF
     export SHELL=fish
     run gg use 1.16
     expect=$(cat <<'EOF'
+# -------- gg begin --------
 # source this code to enable it
 # for example:
 # > gg use 1.16 | source
 
 set -gx GOROOT $HOME/sdk/go1.16
 fish_add_path $GOROOT/bin
+# -------- gg end --------
 EOF
 )
     echo "output:$output"

@@ -42,7 +42,7 @@ function _ggenv {
         sed -i '/# ---- gg begin ----/,/# ---- gg end ----/d' .envrc
     fi
 
-    gg use -b $v > .envrc && direnv allow
+    gg use -b "$v" >> .envrc && direnv allow
 }
 
 _ggenv "$@"

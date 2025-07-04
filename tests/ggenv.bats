@@ -1,7 +1,7 @@
 export gg_repo=$(pwd)
 
 setup() {
-    temp=$(mktemp -d)
+    export temp=$(mktemp -d)
     export HOME="$temp"
     export sdkpath="$HOME/sdk"
     echo "HOME:$HOME"
@@ -17,9 +17,12 @@ setup() {
 }
 
 teardown() {
-    rm -rf "$HOME"
+    if [ -n "$temp" ]; then
+        rm -rf "$temp"
+    fi
     unset sdkpath
     unset HOME
+    unset temp
 }
 
 
